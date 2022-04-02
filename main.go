@@ -2,27 +2,17 @@ package main
 
 import (
 	"crypto/tls"
-	"fmt"
-	"io"
-	"log"
 	"net/http"
 	"os"
+	"siakadu-extractor/internal/console"
 )
 
 func main() {
 	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
-	res, err := http.Get("https://siakadu.unila.ac.id/uploads/fotomhs/thumb/1915061056.jpg")
 
-	if err != nil {
-		log.Panic(err.Error())
+	if _, err := os.Stat("./result"); os.IsNotExist(err) {
+		os.MkdirAll("result/images", os.ModePerm)
 	}
 
-	defer res.Body.Close()
-
-	file, _ := os.Create("./foto.jpg")
-
-	defer file.Close()
-
-	io.Copy(file, res.Body)
-	fmt.Println("beres")
+	console.Execute()
 }
