@@ -14,5 +14,9 @@ func main() {
 		os.MkdirAll("result/images", os.ModePerm)
 	}
 
+	if _, err := os.Stat("./report"); os.IsNotExist(err) {
+		os.Mkdir("report", os.ModePerm)
+	}
+
 	console.Execute()
 }
