@@ -9,3 +9,11 @@ func RequiredArgs(args []string) error {
 
 	return nil
 }
+
+func RequiredArgsNum(args []string, num int) error {
+	if len(args) != num {
+		return fmt.Errorf("command need exactly %d argument(s). Got: %d", num, len(args))
+	}
+
+	return nil
+}

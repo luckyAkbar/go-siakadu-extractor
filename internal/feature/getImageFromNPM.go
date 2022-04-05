@@ -24,4 +24,5 @@ func GetImageFromNPM(cmd *cobra.Command, args []string) {
 	}
 
 	util.GetImageFromNPM(args[0])
+	os.Exit(0)
 }
