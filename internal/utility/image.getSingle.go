@@ -3,7 +3,6 @@ package utility
 import (
 	"fmt"
 	"log"
-	"os"
 )
 
 func (u *Utility) GetImageFromNPM(NPM string) {
@@ -12,10 +11,9 @@ func (u *Utility) GetImageFromNPM(NPM string) {
 
 		if err == nil {
 			saveImage(res, NPM, ext)
-
 			res.Close()
 
-			os.Exit(0)
+			return
 		}
 	}
 
