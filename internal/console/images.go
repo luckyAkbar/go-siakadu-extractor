@@ -6,15 +6,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var imageCMD = &cobra.Command{
-	Use:     "image",
-	Short:   "Get profile image single",
-	Long:    "Get profile image from given NPM. If not found, no result produced.",
-	Example: "image 1915061056",
+var imagesCmd = &cobra.Command{
+	Use:     "images",
+	Short:   "Get profile image range",
+	Long:    "Get profile image from given NPM range. If not found, no result produced.",
+	Example: "image 1915061056 1915061060",
 	Version: "1",
-	Run:     feature.GetImageFromNPM,
+	Run:     feature.GetImageFromNPMRange,
 }
 
 func init() {
-	RootCMD.AddCommand(imageCMD)
+	RootCMD.AddCommand(imagesCmd)
 }
