@@ -1,3 +1,4 @@
 result/
 report/
 tmp/
+.env
