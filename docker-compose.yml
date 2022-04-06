@@ -1,0 +1,9 @@
+version: "3"
+
+services:
+  go-siakadu-extractor:
+    build: .
+    command: "${CMD}"
+    volumes:
+      - ./result:/app/result
+      - ./report:/app/report
