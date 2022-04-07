@@ -9,5 +9,7 @@ import (
 func GetAllProfileImage(cmd *cobra.Command, args []string) {
 	util := utility.New()
 
-	util.GetAllProfileImage()
+	delay := util.GetRequestDelaySecFlag(cmd)
+
+	util.GetAllProfileImage(delay)
 }
