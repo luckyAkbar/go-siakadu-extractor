@@ -2,7 +2,6 @@ package utility
 
 import (
 	"fmt"
-	"log"
 )
 
 func (u *Utility) GetImageFromNPM(NPM string) {
@@ -13,9 +12,11 @@ func (u *Utility) GetImageFromNPM(NPM string) {
 			saveImage(res, NPM, ext)
 			res.Close()
 
+			u.WriteLog(fmt.Sprintf("Image for NPM: %s found.", NPM))
+
 			return
 		}
 	}
 
-	log.Printf("Image for NPM: %s is not found.", NPM)
+	u.WriteLog(fmt.Sprintf("Image for NPM: %s is not found.", NPM))
 }
