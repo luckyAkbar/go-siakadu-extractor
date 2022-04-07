@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-func (u *Utility) GetImageFromNPM(NPM string) {
+func (u *Utility) GetImageFromNPM(NPM string) error {
 	for _, ext := range POSSIBLE_IMAGE_EXT {
 		res, err := RequestImage(fmt.Sprintf("%s%s%s", IMAGE_URL, NPM, ext))
 
@@ -14,9 +14,11 @@ func (u *Utility) GetImageFromNPM(NPM string) {
 
 			u.WriteLog(fmt.Sprintf("Image for NPM: %s found.", NPM))
 
-			return
+			return nil
 		}
 	}
 
 	u.WriteLog(fmt.Sprintf("Image for NPM: %s is not found.", NPM))
+
+	return fmt.Errorf("Image for NPM: %s is not found.", NPM)
 }
