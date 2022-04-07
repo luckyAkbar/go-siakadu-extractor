@@ -15,6 +15,8 @@ type NPMIncrementor struct {
 	CurrentDivision    string
 	CurrentAbsent      string
 	GeneratedCount     int
+	SequentialFailureCount int
+	MaxSequentialFailure int
 	IsMaxReached       bool
 }
 
@@ -28,6 +30,8 @@ func NewIncrementor(start, to string) *NPMIncrementor {
 		CurrentDivision:    start[4:7],
 		CurrentAbsent:      start[7:10],
 		GeneratedCount:     0,
+		SequentialFailureCount: 0, // this and max seq set to this val
+		MaxSequentialFailure: -1,	// so will not take effect if not needed
 		IsMaxReached:       false,
 	}
 }
@@ -133,6 +137,15 @@ func (n *NPMIncrementor) incrementAbsent() {
 	tmp, _ := strconv.Atoi(n.CurrentAbsent)
 	tmp++
 
+	if n.SequentialFailureCount > n.MaxSequentialFailure {
+		n.CurrentAbsent = "000"
+
+		n.ResetSeqFailureCount()
+		n.incrementDivision()
+
+		return
+	}
+
 	if tmp == 1000 {
 		n.CurrentAbsent = "000"
 		n.incrementDivision()
@@ -157,4 +170,16 @@ func (n *NPMIncrementor) GetCurrent() string {
 	n.Current = fmt.Sprintf("%s%s%s%s", n.CurrentYear, n.CurrentDepartement, n.CurrentDivision, n.CurrentAbsent)
 
 	return n.Current
+}
+
+func (n *NPMIncrementor) SetMaxSequentialFailure(value int) {
+	n.MaxSequentialFailure = value
+}
+
+func (n *NPMIncrementor) IncrementSeqFailureCount() {
+	n.SequentialFailureCount++
+}
+
+func (n *NPMIncrementor) ResetSeqFailureCount() {
+	n.SequentialFailureCount = 0
 }

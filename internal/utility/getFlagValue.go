@@ -17,3 +17,15 @@ func (u *Utility) GetRequestDelaySecFlag(cmd *cobra.Command) int {
 
 	return delay
 }
+
+func (u *Utility) GetMaxSeqFailureCount(cmd *cobra.Command) int {
+	maxFailureCount, err := cmd.Flags().GetInt("max-seq-failure")
+
+	if err != nil {
+		log.Println("Invalid / no max sequential failure flag present. Using default value 10")
+
+		return 10
+	}
+
+	return maxFailureCount
+}
