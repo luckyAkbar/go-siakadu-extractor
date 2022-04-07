@@ -2,3 +2,4 @@ result/
 report/
 tmp/
 .env
+*.log
