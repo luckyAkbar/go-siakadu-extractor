@@ -17,4 +17,5 @@ var getAllImagesCmd = &cobra.Command{
 
 func init() {
 	imagesCmd.AddCommand(getAllImagesCmd)
+	getAllImagesCmd.PersistentFlags().Int("request-delay-sec", 0, "Make every request delayed as input (ms)")
 }
