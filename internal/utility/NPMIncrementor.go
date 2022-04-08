@@ -69,8 +69,8 @@ func (n *NPMIncrementor) incrementYear() {
 	tmp, _ := strconv.Atoi(n.CurrentYear)
 	tmp++
 
-	last2YearDigitsStr := strconv.Itoa(time.Now().Year())
-	last2YearDigits, _ := strconv.Atoi(last2YearDigitsStr[0:2])
+	s := strconv.Itoa(time.Now().Year())
+	last2YearDigits, _ := strconv.Atoi(s[len(s)-2:])
 
 	if tmp > last2YearDigits {
 		n.IsMaxReached = true
