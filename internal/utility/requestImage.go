@@ -12,7 +12,9 @@ func RequestImage(link string) (io.ReadCloser, error) {
 	res, err := http.Get(link)
 
 	if err != nil {
-		log.Panic(err.Error())
+		log.Printf("Failed to request image for %s because: %s", link, err.Error())
+		log.Println("Retrying....")
+		RequestImage(link)
 	}
 
 	if res.StatusCode != 200 {
