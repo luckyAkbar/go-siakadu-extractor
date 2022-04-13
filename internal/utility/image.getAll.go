@@ -2,8 +2,8 @@ package utility
 
 import "time"
 
-func (u *Utility) GetAllProfileImage(delay, maxSeqFailure int) {
-	i := NewIncrementor("0000000000", "9999999999")
+func (u *Utility) GetAllProfileImage(delay, maxSeqFailure int, start string, to string) {
+	i := NewIncrementor(start, to)
 	i.SetMaxSequentialFailure(maxSeqFailure)
 
 	for !i.IsMaxReached {
