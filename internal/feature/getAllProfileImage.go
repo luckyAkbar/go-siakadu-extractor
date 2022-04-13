@@ -11,6 +11,8 @@ func GetAllProfileImage(cmd *cobra.Command, args []string) {
 
 	delay := util.GetRequestDelaySecFlag(cmd)
 	maxSeqFailure := util.GetMaxSeqFailureCount(cmd)
+	start := util.GetStringFlagValueByName(cmd, "start")
+	to := util.GetStringFlagValueByName(cmd, "to")
 
-	util.GetAllProfileImage(delay, maxSeqFailure)
+	util.GetAllProfileImage(delay, maxSeqFailure, start, to)
 }
