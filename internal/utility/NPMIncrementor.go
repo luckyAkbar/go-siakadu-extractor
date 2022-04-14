@@ -2,37 +2,45 @@ package utility
 
 import (
 	"fmt"
+	"log"
+	"os"
 	"strconv"
 	"time"
 )
 
 type NPMIncrementor struct {
-	Start              string
-	To                 string
-	Current            string
-	CurrentYear        string
-	CurrentDepartement string
-	CurrentDivision    string
-	CurrentAbsent      string
-	GeneratedCount     int
+	Start                  string
+	To                     string
+	Current                string
+	CurrentYear            string
+	CurrentDepartement     string
+	CurrentDivision        string
+	CurrentAbsent          string
+	GeneratedCount         int
 	SequentialFailureCount int
-	MaxSequentialFailure int
-	IsMaxReached       bool
+	MaxSequentialFailure   int
+	IsMaxReached           bool
 }
 
 func NewIncrementor(start, to string) *NPMIncrementor {
+	if err := EnsureNoBackwardNPM(start, to); err != nil {
+		log.Printf("%s. Exiting....", err.Error())
+
+		os.Exit(1)
+	}
+
 	return &NPMIncrementor{
-		Start:              start,
-		To:                 to,
-		Current:            start,
-		CurrentYear:        start[0:2],
-		CurrentDepartement: start[2:4],
-		CurrentDivision:    start[4:7],
-		CurrentAbsent:      start[7:10],
-		GeneratedCount:     0,
-		SequentialFailureCount: 0, // this and max seq set to this val
-		MaxSequentialFailure: -1,	// so will not take effect if not needed
-		IsMaxReached:       false,
+		Start:                  start,
+		To:                     to,
+		Current:                start,
+		CurrentYear:            start[0:2],
+		CurrentDepartement:     start[2:4],
+		CurrentDivision:        start[4:7],
+		CurrentAbsent:          start[7:10],
+		GeneratedCount:         0,
+		SequentialFailureCount: 0,  // this and max seq set to this val
+		MaxSequentialFailure:   -1, // so will not take effect if not needed
+		IsMaxReached:           false,
 	}
 }
 
