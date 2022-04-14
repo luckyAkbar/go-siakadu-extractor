@@ -42,3 +42,15 @@ func (u *Utility) GetStringFlagValueByName(cmd *cobra.Command, flagName string) 
 
 	return value
 }
+
+func (u *Utility) GetIntFlagValueByName(cmd *cobra.Command, flagName string) int {
+	value, err := cmd.Flags().GetInt(flagName)
+
+	if err != nil {
+		fmt.Printf("Flag value: %s is error %s. Using default value (if any).", flagName, err.Error())
+	}
+
+	fmt.Printf("Using flag %s with value %d.\n", flagName, value)
+
+	return value
+}
