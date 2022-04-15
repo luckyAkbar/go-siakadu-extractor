@@ -1,5 +1,7 @@
 package utility
 
+import "time"
+
 func (u *Utility) GetImageFromNPMRange(start, to string, delay, requestOptimizer int, skipYearPlus1 bool) {
 	i := NewIncrementor(start, to)
 	i.SetMaxSequentialFailure(requestOptimizer)
@@ -15,5 +17,7 @@ func (u *Utility) GetImageFromNPMRange(start, to string, delay, requestOptimizer
 		}
 
 		i.Next()
+
+		time.Sleep(time.Duration(delay) * time.Second)
 	}
 }
