@@ -21,4 +21,5 @@ func init() {
 	getAllImagesCmd.PersistentFlags().Int("use-image-req-optimizer", 10, "skip and increment division if sequentially failed to get images from given NPM when sequentially absent crawling is failed / not found. Default to 10")
 	getAllImagesCmd.PersistentFlags().String("start", "0000000000", "Set starting point for full images crawling. Default to: '0000000000'")
 	getAllImagesCmd.PersistentFlags().String("to", "9999999999", "Set final point for full images crawling. Default to: '9999999999'")
+	getAllImagesCmd.PersistentFlags().Bool("skip-year-plus-1", false, "Stop the crawler when reach NPM with year +1 than this year")
 }
