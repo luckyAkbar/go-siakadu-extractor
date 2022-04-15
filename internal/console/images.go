@@ -17,6 +17,7 @@ var imagesCmd = &cobra.Command{
 
 func init() {
 	RootCMD.AddCommand(imagesCmd)
-	imagesCmd.PersistentFlags().Int("request-delay-sec", 0, "Make every request delayed as input (ms)")
-	imagesCmd.PersistentFlags().Int("use-image-req-optimizer", 0, "If set to not zero, will enable image request optimizer based on given value")
+	imagesCmd.PersistentFlags().Int("request-delay-sec", 0, "Make every request delayed as input (s)")
+	imagesCmd.PersistentFlags().Int("use-image-req-optimizer", 0, "skip and increment division if sequentially failed to get images from given NPM when sequentially absent crawling is failed / not found. Default to 0")
+	imagesCmd.PersistentFlags().Bool("skip-year-plus-1", false, "Stop the crawler when reach NPM with year +1 than this year")
 }
