@@ -2,25 +2,37 @@ package utility
 
 import (
 	"fmt"
+	"log"
+	"os"
 	"strconv"
 	"time"
 )
 
 type NPMIncrementor struct {
-	Start              string
-	To                 string
-	Current            string
-	CurrentYear        string
-	CurrentDepartement string
-	CurrentDivision    string
-	CurrentAbsent      string
-	GeneratedCount     int
+	Start                  string
+	To                     string
+	Current                string
+	CurrentYear            string
+	CurrentDepartement     string
+	CurrentDivision        string
+	CurrentAbsent          string
+	GeneratedCount         int
 	SequentialFailureCount int
-	MaxSequentialFailure int
-	IsMaxReached       bool
+	MaxSequentialFailure   int
+	IsMaxReached           bool
+	UseOptimizer           bool
+	SkipYearPlus1          bool
+	DelayOnIncrement       bool
+	DelayTimeSec           int
 }
 
 func NewIncrementor(start, to string) *NPMIncrementor {
+	if err := EnsureNoBackwardNPM(start, to); err != nil {
+		log.Printf("%s. Exiting....", err.Error())
+
+		os.Exit(1)
+	}
+
 	return &NPMIncrementor{
 		Start:              start,
 		To:                 to,
@@ -29,10 +41,6 @@ func NewIncrementor(start, to string) *NPMIncrementor {
 		CurrentDepartement: start[2:4],
 		CurrentDivision:    start[4:7],
 		CurrentAbsent:      start[7:10],
-		GeneratedCount:     0,
-		SequentialFailureCount: 0, // this and max seq set to this val
-		MaxSequentialFailure: -1,	// so will not take effect if not needed
-		IsMaxReached:       false,
 	}
 }
 
@@ -63,19 +71,32 @@ func (n *NPMIncrementor) Next() {
 	if n.Current == n.To {
 		n.IsMaxReached = true
 	}
+
+	currentNum, _ := strconv.Atoi(n.Current)
+	toNum, _ := strconv.Atoi(n.To)
+
+	if currentNum > toNum {
+		n.IsMaxReached = true
+	}
+
+	if n.DelayOnIncrement {
+		time.Sleep(time.Duration(n.DelayTimeSec) * time.Second)
+	}
 }
 
 func (n *NPMIncrementor) incrementYear() {
 	tmp, _ := strconv.Atoi(n.CurrentYear)
 	tmp++
 
-	s := strconv.Itoa(time.Now().Year())
-	last2YearDigits, _ := strconv.Atoi(s[len(s)-2:])
+	if n.SkipYearPlus1 {
+		s := strconv.Itoa(time.Now().Year())
+		last2YearDigits, _ := strconv.Atoi(s[len(s)-2:])
 
-	if tmp > last2YearDigits {
-		n.IsMaxReached = true
+		if tmp >= last2YearDigits {
+			n.IsMaxReached = true
 
-		return
+			return
+		}
 	}
 
 	if tmp == 100 {
@@ -137,13 +158,15 @@ func (n *NPMIncrementor) incrementAbsent() {
 	tmp, _ := strconv.Atoi(n.CurrentAbsent)
 	tmp++
 
-	if n.SequentialFailureCount > n.MaxSequentialFailure {
-		n.CurrentAbsent = "000"
+	if n.UseOptimizer {
+		if n.SequentialFailureCount > n.MaxSequentialFailure {
+			n.CurrentAbsent = "000"
 
-		n.ResetSeqFailureCount()
-		n.incrementDivision()
+			n.resetSeqFailureCount()
+			n.incrementDivision()
 
-		return
+			return
+		}
 	}
 
 	if tmp == 1000 {
@@ -174,12 +197,37 @@ func (n *NPMIncrementor) GetCurrent() string {
 
 func (n *NPMIncrementor) SetMaxSequentialFailure(value int) {
 	n.MaxSequentialFailure = value
+
+	if value > 0 {
+		n.EnableOptimizer()
+	}
 }
 
 func (n *NPMIncrementor) IncrementSeqFailureCount() {
 	n.SequentialFailureCount++
 }
 
-func (n *NPMIncrementor) ResetSeqFailureCount() {
+func (n *NPMIncrementor) resetSeqFailureCount() {
 	n.SequentialFailureCount = 0
+}
+
+func (n *NPMIncrementor) EnableOptimizer() {
+	n.UseOptimizer = true
+	n.SequentialFailureCount = 0
+}
+
+func (n *NPMIncrementor) EnableYearPlus1Skipping() {
+	n.SkipYearPlus1 = true
+}
+
+func (n *NPMIncrementor) SetDelaySec(delayTimeSec int) {
+	n.DelayTimeSec = delayTimeSec
+
+	if delayTimeSec > 0 {
+		n.enableDelay()
+	}
+}
+
+func (n *NPMIncrementor) enableDelay() {
+	n.DelayOnIncrement = true
 }

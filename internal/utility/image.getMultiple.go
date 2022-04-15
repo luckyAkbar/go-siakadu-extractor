@@ -1,19 +1,23 @@
 package utility
 
-import (
-	"fmt"
-	"time"
-)
+import "time"
 
-func (u *Utility) GetImageFromNPMRange(start, to string, delay int) {
+func (u *Utility) GetImageFromNPMRange(start, to string, delay, requestOptimizer int, skipYearPlus1 bool) {
 	i := NewIncrementor(start, to)
+	i.SetMaxSequentialFailure(requestOptimizer)
+	i.SetDelaySec(delay)
+
+	if skipYearPlus1 {
+		i.EnableYearPlus1Skipping()
+	}
 
 	for !i.IsMaxReached {
-		u.GetImageFromNPM(i.GetCurrent())
+		if err := u.GetImageFromNPM(i.GetCurrent()); err != nil {
+			i.IncrementSeqFailureCount()
+		}
+
 		i.Next()
 
 		time.Sleep(time.Duration(delay) * time.Second)
 	}
-
-	fmt.Println(i.GeneratedCount)
 }

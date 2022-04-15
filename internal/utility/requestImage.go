@@ -8,15 +8,17 @@ import (
 )
 
 func RequestImage(link string) (io.ReadCloser, error) {
-	log.Printf("Request image for %s", link)
+	log.Println(fmt.Sprintf("Request image for %s.", link))
 	res, err := http.Get(link)
 
 	if err != nil {
-		log.Panic(err.Error())
+		log.Println(fmt.Sprintf("Failed to request image for %s because: %s", link, err.Error()))
+		log.Println("Retrying....")
+		RequestImage(link)
 	}
 
 	if res.StatusCode != 200 {
-		log.Print(fmt.Printf("Failed to get image from %s", link))
+		log.Println("Failed to get image from: ", link)
 
 		return nil, fmt.Errorf("failed to get image from %s", link)
 	}

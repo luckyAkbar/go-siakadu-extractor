@@ -1,6 +1,7 @@
 package utility
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/spf13/cobra"
@@ -28,4 +29,40 @@ func (u *Utility) GetMaxSeqFailureCount(cmd *cobra.Command) int {
 	}
 
 	return maxFailureCount
+}
+
+func (u *Utility) GetStringFlagValueByName(cmd *cobra.Command, flagName string) string {
+	value, err := cmd.Flags().GetString(flagName)
+
+	if err != nil {
+		fmt.Printf("Flag value: %s is error %s. Using default value (if any).", flagName, err.Error())
+	}
+
+	fmt.Printf("Using flag %s with value %s.\n", flagName, value)
+
+	return value
+}
+
+func (u *Utility) GetIntFlagValueByName(cmd *cobra.Command, flagName string) int {
+	value, err := cmd.Flags().GetInt(flagName)
+
+	if err != nil {
+		fmt.Printf("Flag value: %s is error %s. Using default value (if any).", flagName, err.Error())
+	}
+
+	fmt.Printf("Using flag %s with value %d.\n", flagName, value)
+
+	return value
+}
+
+func (u *Utility) GetBoolFLagValueByName(cmd *cobra.Command, flagName string) bool {
+	value, err := cmd.Flags().GetBool(flagName)
+
+	if err != nil {
+		fmt.Printf("Flag value: %s is error %s. Using default value (if any).", flagName, err.Error())
+	}
+
+	fmt.Printf("Using flag %s with value %t.\n", flagName, value)
+
+	return value
 }

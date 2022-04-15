@@ -1,10 +1,13 @@
 package utility
 
-import "time"
-
-func (u *Utility) GetAllProfileImage(delay, maxSeqFailure int) {
-	i := NewIncrementor("0000000000", "9999999999")
+func (u *Utility) GetAllProfileImage(delay, maxSeqFailure int, start string, to string, skipYearPlus1 bool) {
+	i := NewIncrementor(start, to)
 	i.SetMaxSequentialFailure(maxSeqFailure)
+	i.SetDelaySec(delay)
+
+	if skipYearPlus1 {
+		i.EnableYearPlus1Skipping()
+	}
 
 	for !i.IsMaxReached {
 		if err := u.GetImageFromNPM(i.GetCurrent()); err != nil {
@@ -12,7 +15,5 @@ func (u *Utility) GetAllProfileImage(delay, maxSeqFailure int) {
 		}
 
 		i.Next()
-
-		time.Sleep(time.Duration(delay) * time.Second)
 	}
 }
