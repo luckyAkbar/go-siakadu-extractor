@@ -18,6 +18,7 @@ func saveImage(body io.ReadCloser, NPM string, ext string) {
 		log.Print(err)
 	}
 
+	defer body.Close()
 	defer file.Close()
 
 	log.Printf("Success saving image for: %s", NPM)
